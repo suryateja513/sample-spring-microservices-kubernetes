@@ -68,6 +68,13 @@ jobs:
           gcloud auth configure-docker us-central1-docker.pkg.dev
         shell: bash
 
+      - name: "Install Docker-compose"
+        run: |
+          #!/bin/bash
+          sudo curl -L "https://github.com/docker/compose/releases/download/1.29.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+          sudo chmod +x /usr/local/bin/docker-compose
+        shell: bash
+
       - name: "Build Docker images"
         run: |
           #!/bin/bash
