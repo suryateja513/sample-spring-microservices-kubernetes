@@ -92,10 +92,10 @@ jobs:
       - name: "Push Docker images"
         run: |
           #!/bin/bash
-          docker push us-central1-docker.pkg.dev/project-id/surya-artifact/department-service:latest
-          docker push us-central1-docker.pkg.dev/project-id/surya-artifact/employee-service:latest
-          docker push us-central1-docker.pkg.dev/project-id/surya-artifact/gateway-service:latest
-          docker push us-central1-docker.pkg.dev/project-id/surya-artifact/organization-service:latest
+          docker push us-central1-docker.pkg.dev/pelagic-arch-447215-p4/department-service:latest
+          docker push us-central1-docker.pkg.dev/pelagic-arch-447215-p4/employee-service:latest
+          docker push us-central1-docker.pkg.dev/pelagic-arch-447215-p4/gateway-service:latest
+          docker push us-central1-docker.pkg.dev/pelagic-arch-447215-p4/organization-service:latest
         shell: bash
 
       - name: "Install K8 components"
