@@ -24,11 +24,11 @@ jobs:
         with:
           maven-version: 3.8.2
 
-      - name: "Clean the target directory"
-        run: |
-          #!/bin/bash
-          mvn clean package
-        shell: bash
+#      - name: "Clean the target directory"
+#        run: |
+#          #!/bin/bash
+#          mvn clean package
+#        shell: bash
 
       - name: "Build Jar file for microservice Department-Service"
         run: |
