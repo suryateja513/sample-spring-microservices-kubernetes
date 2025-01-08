@@ -92,17 +92,17 @@ jobs:
       - name: "Push Docker images"
         run: |
           #!/bin/bash
-          docker push us-central1-docker.pkg.dev/pelagic-arch-447215-p4/department-service:latest
-          docker push us-central1-docker.pkg.dev/pelagic-arch-447215-p4/employee-service:latest
-          docker push us-central1-docker.pkg.dev/pelagic-arch-447215-p4/gateway-service:latest
-          docker push us-central1-docker.pkg.dev/pelagic-arch-447215-p4/organization-service:latest
+          docker push us-central1-docker.pkg.dev/pelagic-arch-447215-p4/surya-artifact/department-service:latest
+          docker push us-central1-docker.pkg.dev/pelagic-arch-447215-p4/surya-artifact/employee-service:latest
+          docker push us-central1-docker.pkg.dev/pelagic-arch-447215-p4/surya-artifact/gateway-service:latest
+          docker push us-central1-docker.pkg.dev/pelagic-arch-447215-p4/surya-artifact/organization-service:latest
         shell: bash
 
       - name: "Install K8 components"
         run: |
           #!/bin/bash
           gcloud components install kubectl gke-gcloud-auth-plugin
-          gcloud config set project project-name
+          gcloud config set project pelagic-arch-447215-p4
           gcloud config set compute/region us-central1
           gcloud clusters get-credentials surya-gke-cluster --region=us-central1
           
