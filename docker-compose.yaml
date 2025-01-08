@@ -1,0 +1,26 @@
+version: "3.8"
+
+services:
+  department-service:
+    build:
+      context: ./department-service
+      dockerfile: Dockerfile
+    image: department-service
+
+  employee-service:
+    build:
+      context: ./employee-service
+      dockerfile: Dockerfile
+    image: employee-service
+
+  gateway-service:
+    build:
+      context: ./gateway-service
+      dockerfile: Dockerfile
+    image: gateway-service
+
+  organization-service:
+    build:
+      context: ./organization-service
+      dockerfile: Dockerfile
+    image: organization-service

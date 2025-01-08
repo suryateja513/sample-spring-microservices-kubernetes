@@ -1,0 +1,113 @@
+name: multi-services
+
+on:
+  push:
+    branches:
+      - teja
+
+jobs:
+  multi-deployment:
+    runs-on: ubuntu-latest
+    steps:
+
+      - name: "Checkout to branch"
+        uses: actions/checkout@v4
+
+      - name: "Install Java"
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'zulu'
+          java-version: '17'
+
+      - name: "Install maven"
+        uses: stCarolas/setup-maven@v5
+        with:
+          maven-version: 3.8.2
+
+      - name: "Clean the target directory"
+        run: |
+          #!/bin/bash
+          mvn clean package
+        shell: bash
+
+      - name: "Build Jar file for microservice Department-Service"
+        run: |
+          #!/bin/bash
+           mvn package --file ./department-service/pom.xml
+        shell: bash
+
+      - name: "Build Jar file for microservice Employee-Service"
+        run: |
+          #!/bin/bash
+           mvn package --file ./employee-service/pom.xml
+        shell: bash
+
+      - name: "Build Jar file for microservice Gateway-Service"
+        run: |
+          #!/bin/bash
+           mvn package --file ./gateway-service/pom.xml
+        shell: bash
+
+      - name: "Build Jar file for microservice Organization-Service"
+        run: |
+          #!/bin/bash
+           mvn package --file ./organization-service/pom.xml
+        shell: bash
+
+      - name: "Authenticate GCP SDK"
+        uses: google-github-actions/setup-gcloud@v2
+
+      - name: "Authenticate SA"
+        uses: google-github-actions/auth@v2
+        with:
+          credentials_json: ${{ secrets.SA }}
+
+      - name: " Configure Docker"
+        run: |
+          #!/bin/bash
+          gcloud auth configure-docker us-central1-docker.pkg.dev
+        shell: bash
+
+      - name: "Build Docker images"
+        run: |
+          #!/bin/bash
+          docker-compose -f docker-compose.yaml build
+        shell: bash
+
+      - name: "Tag Docker images"
+        run: |
+          #!/bin/bash
+          docker tag department-service us-central1-docker.pkg.dev/pelagic-arch-447215-p4/surya-artifact/department-service:latest
+          docker tag employee-service us-central1-docker.pkg.dev/pelagic-arch-447215-p4/surya-artifact/employee-service:latest
+          docker tag gateway-service us-central1-docker.pkg.dev/pelagic-arch-447215-p4/surya-artifact/gateway-service:latest
+          docker tag organization-service us-central1-docker.pkg.dev/pelagic-arch-447215-p4/surya-artifact/organization-service:latest
+
+      - name: "Push Docker images"
+        run: |
+          #!/bin/bash
+          docker push us-central1-docker.pkg.dev/project-id/surya-artifact/department-service:latest
+          docker push us-central1-docker.pkg.dev/project-id/surya-artifact/employee-service:latest
+          docker push us-central1-docker.pkg.dev/project-id/surya-artifact/gateway-service:latest
+          docker push us-central1-docker.pkg.dev/project-id/surya-artifact/organization-service:latest
+        shell: bash
+
+      - name: "Install K8 components"
+        run: |
+          #!/bin/bash
+          gcloud components install kubectl gke-gcloud-auth-plugin
+          gcloud config set project project-name
+          gcloud config set compute/region us-central1
+          gcloud clusters get-credentials surya-gke-cluster --region=us-central1
+          
+          kubectl version --client
+
+        shell: bash
+
+      - name: "Deploy K8"
+        run: |
+          #!/bin/bash
+           kubectl apply -f ./department-service/k8s/deployment.yaml
+           kubectl apply -f ./employee-service/k8s/deployment.yaml
+           kubectl apply -f ./gateway-service/k8s/deployment.yaml
+           kubectl apply -f ./organization-service/k8s/deployment.yaml
+        shell: bash
