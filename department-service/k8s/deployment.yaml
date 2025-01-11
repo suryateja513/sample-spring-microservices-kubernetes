@@ -37,6 +37,6 @@ spec:
                 key: spring.data.mongodb.password
           - name: database
             valueFrom:
-              configmapKeyRef:
+              configMapKeyRef:
                 name: department
                 key: spring.data.mongodb.database
