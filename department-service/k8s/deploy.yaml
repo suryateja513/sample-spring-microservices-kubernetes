@@ -1,0 +1,83 @@
+kind: Deployment
+apiVersion: apps/V1
+metadata:
+   name: Department
+   namespace: surya-namespace
+spec:
+  replicas: 5
+  selector:
+    matchLabels:
+      app: Department
+  template:
+    metadata:
+      containers:
+        - name: Department-cont
+          image:
+          ports:
+            - containerPort: 8080
+              protocol: TCP
+          env:
+            - name: SPRING_CLOUD_BOOTSTRAP_ENABLED
+              value: "true"
+            - name: SPRING_CLOUD_KUBERNETES_SECRETS_ENABLEAPI
+              value: "true"
+            - name: mongodb-username
+              valueFrom:
+                secretKeyRef:
+                  name: department
+                  key: spring.data.mongodb.username
+            - name: mongodb-password
+              valueFrom:
+                secretKeyRef:
+                  name: department
+                  key: spring.data.mongodb.password
+
+---
+
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: department
+data:
+  application.properties: |-
+    spring.data.mongodb.host: mongodb
+    spring.data.mongodb.database: admin
+    spring.data.mongodb.authentication-database: admin
+
+---
+
+kind: Secret
+apiVersion: v1
+metadata:
+  name: Department
+data:
+  spring.data.mongodb.password: UGlvdF8xMjM=
+  spring.data.mongodb.username: cGlvdHI=
+type: Opaque
+
+---
+
+kind: Service
+apiVersion: v1
+metadata:
+  name: Department
+spec:
+  selector:
+    app: Department
+  ports:
+    port: 8080
+    targetPort: 8080
+    protocol: TCP
+  type: ClusterIP
+
+
+  type: "postgresql"
+  provider: "postgresql"
+  host: "demo-db"
+  port: "5432"
+  database: "petclinic"
+  username: "user"
+  password: "pass"
+
+
+

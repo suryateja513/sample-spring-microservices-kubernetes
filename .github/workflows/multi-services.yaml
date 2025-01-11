@@ -104,7 +104,7 @@ jobs:
           gcloud components install kubectl gke-gcloud-auth-plugin
           gcloud config set project pelagic-arch-447215-p4
           gcloud config set compute/region us-central1
-          gcloud clusters get-credentials surya-gke-cluster --region=us-central1
+          gcloud container clusters get-credentials surya-gke-cluster --region=us-central1
           
           kubectl version --client
 

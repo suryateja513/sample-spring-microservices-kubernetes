@@ -25,3 +25,18 @@ spec:
             value: "true"
           - name: SPRING_CLOUD_KUBERNETES_SECRETS_ENABLEAPI
             value: "true"
+          - name: mongodb_user
+            valueFrom:
+              secretKeyRef:
+                name: department
+                key: spring.data.mongodb.username
+          - name: mongodb_password
+            valueFrom:
+              secretKeyRef:
+                name: department
+                key: spring.data.mongodb.password
+          - name: database
+            valueFrom:
+              configmapKeyRef:
+                name: department
+                key: spring.data.mongodb.database
